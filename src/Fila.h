@@ -21,5 +21,6 @@ bool filaVazia(FilaPrioridade* fila);
 void inserirCliente(FilaPrioridade* fila, Cliente cliente);
 Cliente removerCliente(FilaPrioridade* fila);
 void imprimirFila(FilaPrioridade* fila);
+int tamanhoFila(FilaPrioridade* fila);
 
 #endif

@@ -30,8 +30,47 @@ void abrirFecharCaixa(Caixa *c[], int nIdent, int nEstado){
                 c[i]->estado = 1;
             }else if(nEstado == 0 && c[i]->estado == 1){
                 c[i]->estado = 0;
+                int cont = 0;
+                for(int j = 0; j < MAX_CAIXAS; j++){
+                    if(c[j]->estado != 0){
+                        int tamanhoInicial =  tamanhoFila(&(c[i]->filaClientes));
+                        for (int k = 0; k <tamanhoInicial; k++)
+                        {
+                            inserirCliente(&(c[j]->filaClientes), (removerCliente(&c[i]->filaClientes)));
+                        }
+                        break;
+                    }
+                    int tamanhoFinal = tamanhoFila(&(c[i]->filaClientes));
+                    if(cont == 3 && tamanhoFinal!=0){
+                        printf("\n!!! Atenção !!!\n");
+                        printf("\nvocê não pode fechar este caixa, primeiro atenda todos os clientes, ou abra outros caixas!\n");
+                        c[i]->estado = 1;
+                    }else if (cont == 3 && tamanhoFinal==0)
+                    {
+                        c[i]->estado = 0;
+                    }
+                    
+                    cont++;
+                }
             }
         }
     }
 }
 
+int retornaSeCaixasVazios(Caixa *c[]){
+    int cont=0;
+    for(int i = 0; i < MAX_CAIXAS; i++){
+        if(c[i]->estado == 0){
+            cont++;
+        }
+        
+
+        
+    }
+    if(cont == 5){
+        return 1;
+    }else{
+        return 0;
+    }
+    
+}

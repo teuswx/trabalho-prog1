@@ -15,4 +15,5 @@ typedef struct Caixa {
 void inicializarCaixa(Caixa *c[]);
 void imprimirEstado(Caixa *c[]);
 void abrirFecharCaixa(Caixa *c[], int nIdent, int nEstado);
+int retornaSeCaixasVazios(Caixa *c[]);
 #endif

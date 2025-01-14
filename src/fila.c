@@ -83,3 +83,14 @@ void imprimirFila(FilaPrioridade* fila) {
     }
 }
 
+int tamanhoFila(FilaPrioridade* fila) {
+    int contador = 0;
+    No* atual = fila->inicio;
+
+    while (atual != NULL) {
+        contador++;
+        atual = atual->proximo;
+    }
+
+    return contador;
+}
