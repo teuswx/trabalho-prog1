@@ -1,17 +1,37 @@
-#include<stdio.h>
 #include "Caixa.h"
 
-void inicializarCaixa(Caixa *c, int nIdentCaixa){
-    c->estado = 1;
-    c->nIdentCaixa = nIdentCaixa;
-}
-void adicionarCliente(Caixa *c, Cliente *cliente, FilaPrioridade *fila){
+void inicializarCaixa(Caixa *c[]) {
+    // Alocar e inicializar as 5 caixas
+    for (int i = 0; i < MAX_CAIXAS; i++) { 
+        c[i] = malloc(sizeof(Caixa));  // Alocando memória para cada caixa
+        if (c[i] == NULL) {  // Verificando se a alocação foi bem-sucedida
+            printf("Erro na alocação de memória\n");
+            exit(1);  // Encerra o programa em caso de falha
+        }
 
-    enfileirar(fila, cliente);
-    c->filaCaixa = fila;
+        // Inicializando o estado e o identificador de cada caixa
+        c[i]->estado = 1;               // Estado padrão
+        c[i]->nIdentCaixa = i + 1;      // nIdentCaixa de 1 a 5
+        inicializarFila(&(c[i]->filaClientes));
+    }
 }
 
-void imprimirCaixa(Caixa *c){
-    printf("\nEstado: %d | numero do caixa, %d |", c->estado, c->nIdentCaixa);
-   exibirFila(c->filaCaixa);
+void imprimirEstado(Caixa *c[]){
+     for (int i = 0; i < MAX_CAIXAS; i++) {
+        printf("Caixa %d: Estado = %d, nIdentCaixa = %d\n", 
+                i + 1, c[i]->estado, c[i]->nIdentCaixa);
+    }
 }
+
+void abrirFecharCaixa(Caixa *c[], int nIdent, int nEstado){
+    for(int i = 0; i < MAX_CAIXAS; i++){
+        if(c[i]->nIdentCaixa == nIdent){
+            if(nEstado == 1 && c[i]->estado == 0){
+                c[i]->estado = 1;
+            }else if(nEstado == 0 && c[i]->estado == 1){
+                c[i]->estado = 0;
+            }
+        }
+    }
+}
+

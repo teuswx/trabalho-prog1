@@ -1,15 +1,18 @@
 #ifndef CAIXA_H
 #define CAIXA_H
-#include "FilaPrioridade.h"
-#include "string.h"
-#include "Cliente.h"
-typedef struct{
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include"Fila.h"
+#define MAX_CAIXAS 5
+
+typedef struct Caixa {
     int nIdentCaixa;
     int estado;
-    FilaPrioridade *filaCaixa;
-}Caixa;
+    FilaPrioridade filaClientes;
+} Caixa;
 
-void inicializarCaixa(Caixa *c, int nIdentCaixa);
-void adicionarCliente(Caixa* c, Cliente *cliente, FilaPrioridade *fila);
-void imprimirCaixa(Caixa *c);
+void inicializarCaixa(Caixa *c[]);
+void imprimirEstado(Caixa *c[]);
+void abrirFecharCaixa(Caixa *c[], int nIdent, int nEstado);
 #endif
