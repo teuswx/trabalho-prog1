@@ -9,17 +9,11 @@ void limparBufferEntrada() {
 }
 int main(){
 
-    Caixa *c[MAX_CAIXAS];  // Vetor de ponteiros para caixas
+    Caixa *c[MAX_CAIXAS]; 
     Cliente cliente;
-    // Inicializando as caixas
+    // inicializa o vetor de caixas com os estados como aberto(1)
     inicializarCaixa(c);
 
-    // Imprimindo o estado das caixas para verificar se foi tudo correto
-    imprimirEstado(c);
-
-    
-  
-    
     int opcao;
     do {
         printf("\nMenu:\n");
@@ -48,45 +42,39 @@ int main(){
                     
                     do {
                         printf("Digite o nome do cliente: ");
-                        // Limpa o buffer de entrada (alternativa ao getchar loop)
                         fgets(nome, sizeof(nome), stdin);
-                        nome[strcspn(nome, "\n")] = '\0'; // Remove o '\n' do final
+                        nome[strcspn(nome, "\n")] = '\0'; 
                         if (strlen(nome) == 0) {
                             printf("Erro: O nome não pode estar vazio.\n");
                         }
                     } while (strlen(nome) == 0);
-
-                    // Lê e valida o CPF
                     do {
                         printf("\nDigite o CPF do cliente (apenas números, 11 dígitos): ");
                         scanf("%11s", cpf);
-                        while (getchar() != '\n'); // Limpa o buffer de entrada
+                        while (getchar() != '\n');
                         if (!validarCPF(cpf)) {
                             printf("Erro: CPF inválido. Deve conter exatamente 11 dígitos numéricos.\n");
                         }
                     } while (!validarCPF(cpf));
 
-                    // Lê e valida a prioridade
                     do {
                         printf("\nDigite a prioridade do cliente (1-Alta, 2-Média, 3-Baixa): ");
                         scanf("%d", &prioridade);
-                        while (getchar() != '\n'); // Limpa o buffer de entrada
+                        while (getchar() != '\n'); 
                         if (prioridade < 1 || prioridade > 3) {
                             printf("Erro: Prioridade inválida. Deve ser 1, 2 ou 3.\n");
                         }
                     } while (prioridade < 1 || prioridade > 3);
 
-                    // Lê e valida o número de itens
                     do {
                         printf("\nDigite o número de itens do cliente: ");
                         scanf("%d", &nItens);
-                        while (getchar() != '\n'); // Limpa o buffer de entrada
+                        while (getchar() != '\n');
                         if (nItens <= 0) {
                             printf("Erro: O número de itens deve ser maior que zero.\n");
                         }
                     } while (nItens <= 0);
 
-                    // Cadastrar cliente
                     cadastrarCliente(&cliente, nome, cpf, prioridade, nItens);
                     int numCaixa = 0;
                     do{
@@ -94,22 +82,22 @@ int main(){
                         scanf("%d", &numCaixa);
                         if(numCaixa < 1 || numCaixa > 5){
                             printf("\n!!! Digite um caixa válido !!!\n");
-                        }
-                        if(c[numCaixa-1]->estado == 0){
+                        }else if(c[numCaixa-1]->estado == 0){
                             printf("\n!Este caixa está fechado!\n");
                             printf("\n!Abra este caixa, ou cadastre em outro!\n");
                         }
+
                     }while(numCaixa < 1 || numCaixa > 5 || c[numCaixa-1]->estado == 0);
                     
                     inserirCliente(&(c[numCaixa-1]->filaClientes), cliente);
                     
-
-                    // Exibir os dados do cliente cadastrado
+                    printf("\n-----------------------------------------------------------------------------------------------\n");
                     printf("\nCliente cadastrado com sucesso:\n");
                     printf("Nome: %s\n", cliente.nome);
                     printf("CPF: %s\n", cliente.cpf);
                     printf("Prioridade: %d\n", cliente.prioridade);
                     printf("Número de itens: %d\n", cliente.nItens);
+                    printf("\n-----------------------------------------------------------------------------------------------\n");
                 }
                 
 
@@ -121,14 +109,21 @@ int main(){
                 do{
                     printf("\nEm qual caixa você deseja atender um cliente? (1 a 5): ");
                     scanf("%d", &numCaixa);
-                    if(numCaixa < 1 || numCaixa > 5){
+                   
+                    if(numCaixa < 1 || numCaixa > 5 || c[numCaixa-1]->estado !=1){
                         printf("\n!!! Digite um caixa válido !!!\n");
                     }
-                }while(numCaixa < 1 || numCaixa > 5);
+                    if(tamanhoFila(&c[numCaixa-1]->filaClientes) == 0){
+                        printf("\n!!! O caixa esta vazio !!!\n");
+                    }
+                }while(numCaixa < 1 || numCaixa > 5 || c[numCaixa-1]->estado !=1 || tamanhoFila(&c[numCaixa-1]->filaClientes) == 0);
+
                 Cliente *clienteAux = malloc(sizeof(Cliente));
 
                 *clienteAux = removerCliente(&(c[numCaixa-1]->filaClientes));
+                printf("\n-----------------------------------------------------------------------------------------------\n");
                 printf("\nCliente %s atendido!\n", clienteAux->nome);
+                printf("\n-----------------------------------------------------------------------------------------------\n");
                 break;
             }
             case 3: {
@@ -140,8 +135,8 @@ int main(){
                     scanf("%d", &nIdent);
                     printf("\nDigite o estado do caixa 1(Abrir), 0(Fechar): ");
                     scanf("%d", &nEstado);
-                    if((nIdent < 0 || nIdent > 5) || (nEstado !=0 && nEstado !=1)){
-                        printf("!!!Atenção digite as informações corretas!!!");
+                    if((nIdent < 1 || nIdent > 5) || (nEstado !=0 && nEstado !=1)){
+                        printf("\n!!!Atenção digite as informações corretas!!!\n");
                     }
                 } while ((nIdent < 1 || nIdent > 5) || (nEstado != 0 && nEstado != 1));
                 
@@ -155,9 +150,7 @@ int main(){
                     printf("\nCAIXA NUMERO %d\n", i+1);
                     imprimirFila(&(c[i]->filaClientes));
                 }
-                
-
-                
+                                
                 break;
             }
             case 5:{

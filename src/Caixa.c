@@ -1,61 +1,67 @@
 #include "Caixa.h"
 
 void inicializarCaixa(Caixa *c[]) {
-    // Alocar e inicializar as 5 caixas
     for (int i = 0; i < MAX_CAIXAS; i++) { 
-        c[i] = malloc(sizeof(Caixa));  // Alocando memória para cada caixa
-        if (c[i] == NULL) {  // Verificando se a alocação foi bem-sucedida
+        c[i] = malloc(sizeof(Caixa));
+        if (c[i] == NULL) { 
             printf("Erro na alocação de memória\n");
-            exit(1);  // Encerra o programa em caso de falha
+            exit(1); 
         }
-
-        // Inicializando o estado e o identificador de cada caixa
-        c[i]->estado = 1;               // Estado padrão
-        c[i]->nIdentCaixa = i + 1;      // nIdentCaixa de 1 a 5
+        c[i]->estado = 1;              
+        c[i]->nIdentCaixa = i + 1; 
+        // para cada caixa eu inicializo uma fila de clientes
         inicializarFila(&(c[i]->filaClientes));
     }
 }
 
 void imprimirEstado(Caixa *c[]){
      for (int i = 0; i < MAX_CAIXAS; i++) {
-        printf("Caixa %d: Estado = %d, nIdentCaixa = %d\n", 
-                i + 1, c[i]->estado, c[i]->nIdentCaixa);
+        printf("Caixa %d: Estado = %d\n", 
+                i + 1, c[i]->estado);
     }
 }
 
 void abrirFecharCaixa(Caixa *c[], int nIdent, int nEstado){
-    for(int i = 0; i < MAX_CAIXAS; i++){
-        if(c[i]->nIdentCaixa == nIdent){
-            if(nEstado == 1 && c[i]->estado == 0){
+    for (int i = 0; i < MAX_CAIXAS; i++) {
+        if (c[i]->nIdentCaixa == nIdent) {
+            if (nEstado == 1 && c[i]->estado == 0) {
                 c[i]->estado = 1;
-            }else if(nEstado == 0 && c[i]->estado == 1){
+            } else if (nEstado == 0 && c[i]->estado == 1) {
                 c[i]->estado = 0;
-                int cont = 0;
-                for(int j = 0; j < MAX_CAIXAS; j++){
-                    if(c[j]->estado != 0){
-                        int tamanhoInicial =  tamanhoFila(&(c[i]->filaClientes));
-                        for (int k = 0; k <tamanhoInicial; k++)
-                        {
-                            inserirCliente(&(c[j]->filaClientes), (removerCliente(&c[i]->filaClientes)));
+                int tamanhoInicial = tamanhoFila(&(c[i]->filaClientes));
+
+                while (tamanhoInicial > 0) { // Enquanto ainda houver clientes na fila do caixa atual
+                    int menorFila = -1;
+                    int menorTamanho = INT_MAX;
+
+                    // Encontrar o caixa com a menor fila que esteja aberto
+                    for (int j = 0; j < MAX_CAIXAS; j++) {
+                        if (c[j]->estado != 0) { // Apenas caixas abertos
+                            int tamanhoAtual = tamanhoFila(&(c[j]->filaClientes));
+                            if (tamanhoAtual < menorTamanho) {
+                                menorFila = j;
+                                menorTamanho = tamanhoAtual;
+                            }
                         }
-                        break;
-                    }
-                    int tamanhoFinal = tamanhoFila(&(c[i]->filaClientes));
-                    if(cont == 3 && tamanhoFinal!=0){
-                        printf("\n!!! Atenção !!!\n");
-                        printf("\nvocê não pode fechar este caixa, primeiro atenda todos os clientes, ou abra outros caixas!\n");
-                        c[i]->estado = 1;
-                    }else if (cont == 3 && tamanhoFinal==0)
-                    {
-                        c[i]->estado = 0;
                     }
                     
-                    cont++;
-                }
+                    if (menorFila != -1) {
+                        // Mover o próximo cliente para o caixa com a menor fila
+                        Cliente cliente = removerCliente(&(c[i]->filaClientes));
+                        inserirCliente(&(c[menorFila]->filaClientes), cliente);
+                        tamanhoInicial--;
+                    } else {
+                        printf("\n!!! Atenção !!!\n");
+                        printf("\nVocê não pode fechar este caixa, primeiro atenda todos os clientes, ou abra outros caixas!\n");
+                        c[i]->estado = 1;
+                        break; 
+                    }
+                }   
             }
         }
     }
 }
+
 
 int retornaSeCaixasVazios(Caixa *c[]){
     int cont=0;
@@ -63,9 +69,6 @@ int retornaSeCaixasVazios(Caixa *c[]){
         if(c[i]->estado == 0){
             cont++;
         }
-        
-
-        
     }
     if(cont == 5){
         return 1;

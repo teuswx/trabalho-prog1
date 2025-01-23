@@ -20,7 +20,6 @@ void inserirCliente(FilaPrioridade* fila, Cliente cliente) {
     novo->cliente = cliente;
     novo->proximo = NULL;
 
-    // Inserção ordenada por prioridade
     if (filaVazia(fila)) {
         fila->inicio = novo;
         fila->fim = novo;
@@ -28,20 +27,19 @@ void inserirCliente(FilaPrioridade* fila, Cliente cliente) {
         No* atual = fila->inicio;
         No* anterior = NULL;
 
-        // Procurar posição correta baseado na prioridade
         while (atual && atual->cliente.prioridade <= cliente.prioridade) {
             anterior = atual;
             atual = atual->proximo;
         }
 
-        if (anterior == NULL) {  // Inserção no início
+        if (anterior == NULL) {  
             novo->proximo = fila->inicio;
             fila->inicio = novo;
-        } else {  // Inserção no meio ou final
+        } else {  
             anterior->proximo = novo;
             novo->proximo = atual;
 
-            if (atual == NULL) {  // Atualizar o fim da fila
+            if (atual == NULL) { 
                 fila->fim = novo;
             }
         }
@@ -51,14 +49,14 @@ void inserirCliente(FilaPrioridade* fila, Cliente cliente) {
 Cliente removerCliente(FilaPrioridade* fila) {
     if (filaVazia(fila)) {
         printf("A fila está vazia.\n");
-        exit(EXIT_FAILURE); // Opcional: retorne um Cliente "inválido" se preferir evitar sair do programa.
+        exit(EXIT_FAILURE); 
     }
 
     No* removido = fila->inicio;
     Cliente cliente = removido->cliente;
     fila->inicio = removido->proximo;
 
-    if (fila->inicio == NULL) {  // Atualizar o fim se a fila ficou vazia
+    if (fila->inicio == NULL) { 
         fila->fim = NULL;
     }
 
