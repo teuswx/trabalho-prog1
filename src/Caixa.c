@@ -35,7 +35,7 @@ void abrirFecharCaixa(Caixa *c[], int nIdent, int nEstado){
                     int menorTamanho = INT_MAX;
 
                     for (int j = 0; j < MAX_CAIXAS; j++) {
-                        if (c[j]->estado != 0) { // Apenas caixas abertos
+                        if (c[j]->estado != 0) { 
                             int tamanhoAtual = tamanhoFila(&(c[j]->filaClientes));
                             if (tamanhoAtual < menorTamanho) {
                                 menorFila = j;
@@ -45,7 +45,7 @@ void abrirFecharCaixa(Caixa *c[], int nIdent, int nEstado){
                     }
                     
                     if (menorFila != -1) {
-                        // Mover o próximo cliente para o caixa com a menor fila
+                        // Move o próximo cliente para o caixa com a menor fila
                         Cliente cliente = removerCliente(&(c[i]->filaClientes));
                         inserirCliente(&(c[menorFila]->filaClientes), cliente);
                         tamanhoInicial--;
