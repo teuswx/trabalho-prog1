@@ -30,11 +30,10 @@ void abrirFecharCaixa(Caixa *c[], int nIdent, int nEstado){
                 c[i]->estado = 0;
                 int tamanhoInicial = tamanhoFila(&(c[i]->filaClientes));
 
-                while (tamanhoInicial > 0) { // Enquanto ainda houver clientes na fila do caixa atual
+                while (tamanhoInicial > 0) { 
                     int menorFila = -1;
                     int menorTamanho = INT_MAX;
 
-                    // Encontrar o caixa com a menor fila que esteja aberto
                     for (int j = 0; j < MAX_CAIXAS; j++) {
                         if (c[j]->estado != 0) { // Apenas caixas abertos
                             int tamanhoAtual = tamanhoFila(&(c[j]->filaClientes));

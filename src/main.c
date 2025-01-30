@@ -11,7 +11,6 @@ int main(){
 
     Caixa *c[MAX_CAIXAS]; 
     Cliente cliente;
-    // inicializa o vetor de caixas com os estados como aberto(1)
     inicializarCaixa(c);
 
     int opcao;
